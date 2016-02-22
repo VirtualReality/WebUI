@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Contributors, http://WhiteCore-sim.org/
+ * Copyright (c) Contributors, http://virtual-planets.org/, http://whitecore-sim.org/
  * See CONTRIBUTORS.TXT for a full list of copyright holders.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the WhiteCore-Sim Project nor the
+ *     * Neither the name of the Virtual Universe Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -25,24 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using WhiteCore.Framework;
-using WhiteCore.Framework.ClientInterfaces;
-using WhiteCore.Framework.ConsoleFramework;
-using WhiteCore.Framework.DatabaseInterfaces;
-using WhiteCore.Framework.Modules;
-using WhiteCore.Framework.SceneInfo;
-using WhiteCore.Framework.Servers;
-using WhiteCore.Framework.Servers.HttpServer;
-using WhiteCore.Framework.Servers.HttpServer.Implementation;
-using WhiteCore.Framework.Servers.HttpServer.Interfaces;
-using WhiteCore.Framework.Services;
-using WhiteCore.Framework.Services.ClassHelpers.Assets;
-using WhiteCore.Framework.Services.ClassHelpers.Profile;
-using WhiteCore.Framework.Utilities;
-using Nini.Config;
-using OpenMetaverse;
-using OpenMetaverse.Imaging;
-using OpenMetaverse.StructuredData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,16 +37,32 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using WhiteCore.Framework.PresenceInfo;
-using WhiteCore.Modules;
-using DataPlugins = WhiteCore.Framework.Utilities.DataManager;
-using FriendInfo = WhiteCore.Framework.Services.FriendInfo;
-using GridRegion = WhiteCore.Framework.Services.GridRegion;
-using RegionFlags = WhiteCore.Framework.Services.RegionFlags;
-using WhiteCore.Modules.Currency;
+using Nini.Config;
+using OpenMetaverse;
+using OpenMetaverse.Imaging;
+using OpenMetaverse.StructuredData;
+using Universe.Framework.ClientInterfaces;
+using Universe.Framework.ConsoleFramework;
+using Universe.Framework.DatabaseInterfaces;
+using Universe.Framework.Modules;
+using Universe.Framework.PresenceInfo;
+using Universe.Framework.SceneInfo;
+using Universe.Framework.Servers;
+using Universe.Framework.Servers.HttpServer;
+using Universe.Framework.Servers.HttpServer.Implementation;
+using Universe.Framework.Servers.HttpServer.Interfaces;
+using Universe.Framework.Services;
+using Universe.Framework.Services.ClassHelpers.Assets;
+using Universe.Framework.Services.ClassHelpers.Profile;
+using Universe.Framework.Utilities;
+using Universe.Modules;
+using Universe.Modules.Currency.BaseCurrency;
+using DataPlugins = Universe.Framework.Utilities.DataManager;
+using FriendInfo = Universe.Framework.Services.FriendInfo;
+using GridRegion = Universe.Framework.Services.GridRegion;
+using RegionFlags = Universe.Framework.Services.RegionFlags;
 
-
-namespace WhiteCore.Addon.WebUI
+namespace Universe.Addon.WebUI
 {
     public class WebUIHandler : IService
     {
@@ -244,6 +242,7 @@ namespace WhiteCore.Addon.WebUI
             DataPlugins.RequestPlugin<IAgentConnector>().UpdateAgent(agent);
             MainConsole.Instance.Warn ("Admin added");
         }
+
 		#region newcommands
 		//Bit of Sanitizing
 		public static string CleanCommandStrings(string dirtyString)
@@ -268,8 +267,6 @@ namespace WhiteCore.Addon.WebUI
 			MainConsole.Instance.RunCommand ("grid clear region " + regionname);
 		}
 
-     
-
         private void GetUserMoney(IScene scene, UUID User)
         {
             m_connector.GetUserCurrency(User);
@@ -280,32 +277,37 @@ namespace WhiteCore.Addon.WebUI
             m_connector.UserCurrencyTransfer(to, from, amount, "Money Transfer from" + from , TransactionType.MoveMoney,
                 UUID.Zero);
         }
+
         private void SetLoginText(IScene scene, string text)
 		{
-		MainConsole.Instance.RunCommand ("set login text " + CleanCommandStrings(text));
+            MainConsole.Instance.RunCommand ("set login text " + CleanCommandStrings(text));
 		}
+
 		#endregion
         private void DemoteUser(IScene scene, string[] cmd)
         {
-        string name = MainConsole.Instance.Prompt ("Name of user");
-        UserAccount acc = m_registry.RequestModuleInterface<IUserAccountService> ().GetUserAccount(null, name);
-        if (acc == null)
+            string name = MainConsole.Instance.Prompt ("Name of user");
+            UserAccount acc = m_registry.RequestModuleInterface<IUserAccountService> ().GetUserAccount(null, name);
+            if (acc == null)
             {
                 MainConsole.Instance.Warn ("User does not exist, no action taken.");
                 return;
             }
+
             IAgentConnector agents = DataPlugins.RequestPlugin<IAgentConnector>();
             if (agents == null)
             {
                 MainConsole.Instance.Warn("Could not get IAgentConnector plugin");
                 return;
             }
+
             IAgentInfo agent = agents.GetAgent(acc.PrincipalID);
             if (agent == null)
             {
                 MainConsole.Instance.Warn("Could not get IAgentInfo for " + name + ", try logging the user into your grid first.");
                 return;
             }
+
             agent.OtherAgentInformation["WebUIEnabled"] = false;
             DataPlugins.RequestPlugin<IAgentConnector>().UpdateAgent(agent);
             MainConsole.Instance.Warn ("Admin removed");
