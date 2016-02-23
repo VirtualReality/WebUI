@@ -80,7 +80,7 @@ $webui_register='Registracija';
 //
 // News Page
 //
-$webui_news = 'WhiteCore novice';
+$webui_news = 'Universe novice';
 $webui_history = 'Zgodovina';
 $webui_news_history = 'Zgodovina novic';
 $webui_no_news = 'Trenutno ni novic.';

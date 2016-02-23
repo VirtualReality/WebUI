@@ -641,7 +641,7 @@ $time = explode(" ", $time);
 $time = $time[1] + $time[0]; 
 $finish = $time; 
 $totaltime = ($finish - $start);
-echo "<p>Copyright 2014 © the WhiteCore-Sim project</p>";
+echo "<p>Copyright 2015-2025 © the Virtual Universe project</p>";
 echo "<p>All Rights Reserved</p>";
 if($displayPageLoadTime) {printf ("$this_page_took %f $seconds_to_load.", $totaltime);}
 ?>

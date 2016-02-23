@@ -82,7 +82,7 @@ $webui_register='Registrieren';
 //
 // News Page
 //
-$webui_news = 'WhiteCore Nachrichten';
+$webui_news = 'Universe Nachrichten';
 $webui_history = 'Historie';
 $webui_news_history = 'Nachrichten Historie';
 $webui_no_news = 'No news';

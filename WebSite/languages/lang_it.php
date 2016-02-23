@@ -86,7 +86,7 @@ $webui_register='Registrati';
 //
 // News Page
 //
-$webui_news = 'WhiteCore Novita';
+$webui_news = 'Universe Novita';
 $webui_history = 'Estratto Conto';
 $webui_news_history = 'Novita Estratto Conto';
 $webui_no_news = 'No news';
